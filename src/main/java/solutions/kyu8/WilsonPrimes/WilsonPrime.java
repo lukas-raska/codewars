@@ -1,17 +1,11 @@
 package solutions.kyu8.WilsonPrimes;
 
+import org.junit.jupiter.api.Test;
+
 import java.math.BigInteger;
 
 public class WilsonPrime {
 
-    public static void main(String[] args) {
-
-        System.out.println(amIWilson(563));
-        System.out.println(amIWilson(13));
-        System.out.println(amIWilson(5));
-
-
-    }
 
     /**
      * Determines whether the specified number is a wilson prime number
@@ -19,7 +13,7 @@ public class WilsonPrime {
      * @param n - natural number
      * @return - return true, if given natural number is a Wilson prime
      */
-    private static boolean amIWilson(long n) {
+    public static boolean amIWilson(long n) {
         if (n < 2) {
             return false;
         }
@@ -35,7 +29,7 @@ public class WilsonPrime {
      * @param number Natural number
      * @return Factorial of natural number
      */
-    private static BigInteger factorial(long number) {
+    public static BigInteger factorial(long number) {
         if (number < 0) {
             throw new ArithmeticException(number + " is not a natural number. Factorial is not defined.");
         }
