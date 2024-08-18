@@ -1,6 +1,7 @@
 package solutions.kyu5;
 
 import org.junit.jupiter.api.Test;
+import solutions.kyu5.gapInPrimes.GapInPrimes;
 
 import java.util.Arrays;
 

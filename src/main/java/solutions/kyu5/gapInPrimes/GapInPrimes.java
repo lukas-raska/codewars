@@ -1,9 +1,7 @@
-package solutions.kyu5;
+package solutions.kyu5.gapInPrimes;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 public class GapInPrimes {
 
