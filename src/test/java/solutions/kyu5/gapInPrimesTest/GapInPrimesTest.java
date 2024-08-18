@@ -1,4 +1,4 @@
-package solutions.kyu5;
+package solutions.kyu5.gapInPrimesTest;
 
 import org.junit.jupiter.api.Test;
 import solutions.kyu5.gapInPrimes.GapInPrimes;
