@@ -4,13 +4,14 @@ import java.util.*;
 
 public class SumOfSquares {
 
+
     public static void main(String[] args) {
 
-        System.out.println(nSquaresFor2(14));
+        var numbers = List.of(1000054, 17, 27, 37, 47, 57, 67, 77, 87, 97);
+        numbers.forEach(i -> System.out.println("Number: " + i + " Right counter: " + nSquaresFor(i) + " , MyCounter: " + nSquaresFor2(i) + ", IterCount: " + iterCountMap.get(i)));
+        ;
 
-        for (int i = 1; i < 1000; i++) {
-            System.out.println("Number: " + i + " Right counter: " + nSquaresFor(i) + " , MyCounter: " + nSquaresFor2(i));
-        }
+
     }
 
     //algoritmus dle rady chatGPT
@@ -29,11 +30,15 @@ public class SumOfSquares {
         return minSquaresCount[n];
     }
 
+
+    //moje řešení
+    //ačkoli kód je celkem škaredý, ukázalo se časově efektivnější než předchozí
+    //projde testy easy, medium, hard, neprojde extreme testy
     public static int nSquaresFor2(int n) {
 
         final List<Integer> squares = findPossibleSquares(n);
         int size = squares.size();
-        int sum = 0;
+
 
         if (squares.getFirst() == n) {
             return 1;   // pokud je samotné číslo dokonalým čtvercem
@@ -41,44 +46,26 @@ public class SumOfSquares {
 
         //zkouším kombinace 2 čtverců
         for (int i = 0; i < size; i++) {
-            sum += squares.get(i);
+
             for (int j = i; j < size; j++) {
-                sum += squares.get(j);
-                if (sum == n) {
+
+                if (squares.get(i) + squares.get(j) == n) {
+
                     return 2;
-                } else if (sum > n) {
-                    sum -= squares.get(j);
-                } else {
-                    sum = 0;
-                    break;
+                }
+            }
+        }
+        //pokud nenaleznu kombinaci 2 čtverců, hledám kombinaci 3
+        for (int i = 0; i < size; i++) {
+            for (int j = i; j < size; j++) {
+                for (int k = j; k < size; k++) {
+                    if (squares.get(i) + squares.get(j) + squares.get(k) == n) {
+                        return 3;
+                    }
                 }
             }
         }
 
-        //pokud nenaleznu kombinaci 2 čtverců, hledám kombinaci 3
-        sum = 0;
-        for (int i = 0; i < size; i++) {
-            sum += squares.get(i);
-            for (int j = i; j < size; j++) {
-                sum += squares.get(j);
-                if (sum > n) {
-                    sum -= squares.get(j);
-                    continue;
-                }
-                for (int k = j; k < size; k++) {
-                    sum += squares.get(k);
-                    if (sum == n) {
-                        return 3;
-                    }
-                    if (sum > n) {
-                        sum -= squares.get(k);
-                    } else {
-                        sum = 0;
-                        break;
-                    }
-                }
-            }
-        }
         return 4; //pokud není nalezena kombinace 1,2,3 čtverců, vrátím 4, což je dle Lagrangeovy věty max. možná
         // hodnota
     }
