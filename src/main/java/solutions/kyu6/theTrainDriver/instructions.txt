@@ -1,0 +1,50 @@
+Description:
+The Train Driver is the most famous train driver of all Skyport. It is said they are the fastest and most handsome
+train driver. But they have a problem, they do not know how to calculate the time properly. As their assistant, your
+job is to figure out at what time they will arrive at their final destination, taking into account that they have to
+wait some time to prepare everytime before they start a trip.
+
+You will be provided with a list of The Train Driver's destinations in order and the departure time from his starting
+station in Skyport. Sometimes, the machine that prints the itinerary will give an empty list. In that case, that means
+The Train Driver has a day off. If two identical cities a listed in a row, The Train Driver must wait there an hour in
+order to complain to his superior, The Mighty Boss.
+
+ORIGIN	DESTINATION	STANDBY TIME	TRIP DURATION
+Skyport	Crystalium	15 min	2 hours
+Crystalium	Skyport	10 min	2 hours
+Skyport	Oasis	20 min	3 hours
+Oasis	Skyport	15 min	3 hours
+Oasis	Crystalium	15 min	1.5 hours
+Crystalium	Oasis	10 min	1.5 hours
+Skyport	Nexus	15 min	4 hours
+Nexus	Skyport	10 min	4 hours
+EXAMPLES
+
+["Crystalium"], "10:00" -> should return "12:15"
+Skyport -> Crystalium: 15 minutes + 2 hours -> 12:15
+
+["Crystalium", "Skyport", "Oasis"], "10:00" -> should return "17:45"
+Skyport -> Crystalium: 15 minutes + 2 hours -> 12:15
+Crystalium -> Skyport: 10 minutes + 2 hours -> 14:25
+Skyport -> Oasis: 20 minutes + 3 hours -> 17:45
+
+["Nexus", "Skyport", "Oasis"], "21:30"  -> should return "09:15"
+Skyport -> Nexus: 15 minutes + 4 hours -> 02:45
+Nexus -> Skyport: 10 minutes + 4 hours -> 06:55
+Skyport -> Oasis: 20 minutes + 3 hours -> 09:15
+
+["Skyport"], "22:00"  -> should return "23:00"
+Skyport -> Skyport: 1 hour wait -> 23:00
+
+["Crystalium", "Nexus"], "12:00" -> should return "20:40"
+Skyport -> Crystalium: 15 minutes + 2 hours -> 14:15
+Crystalium -> Skyport: 10 minutes + 2 hours -> 16:25
+Skyport -> Nexus: 15 minutes + 4 hours -> 20:40
+SPECIAL CASES
+
+If there are no destinations, return "The Train Driver has the day off".
+The Train Driver always starts their shift at Skyport.
+Whenever a train is taken, the waiting time must be added, even if it's the last destination.
+If there is no direct connection to his next destination, The Train Driver must return to Skyport as SkyPort has connection to all the other cities and then continue their journey from there. The time it takes to return to Skyport and the waiting time also count.
+If the next destination is the same city The Train Driver is already at, they must wait an hour before continuing.
+The expected format for the output is 'HH:mm'. '8:00' is not a valid format; instead, '08:00' should be returned.
