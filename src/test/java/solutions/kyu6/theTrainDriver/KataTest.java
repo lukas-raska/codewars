@@ -56,7 +56,16 @@ class KataTest {
         String result = Kata.arrivalTime(route, departureTime);
         String msg = "Input: " + Arrays.toString(route) + ", " + departureTime;
         assertEquals(expected, result, msg);
-        assertEquals("17:20", result, msg);
-    }
+            }
+
+    @Test
+    void testCrystaliumNexus(){
+        String[] route = {"Crystalium", "Nexus"};
+        String departureTime = "23:50";
+        String expected = "08:30";
+        String result = Kata.arrivalTime(route, departureTime);
+        String msg = "Input: " + Arrays.toString(route) + ", " + departureTime;
+        assertEquals(expected, result, msg);
+            }
 
 }

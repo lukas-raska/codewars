@@ -1,7 +1,6 @@
 package solutions.kyu6.theTrainDriver;
 
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,51 +31,45 @@ public class Kata {
             return "The Train Driver has the day off";
         }
 
-        double elapsedTime = 0;
+        int elapsedTime = 0; //in minutes
         int routeIndex = 0;
         String currentPlace = STARTING_PLACE;
         String nextPlace = routes[routeIndex];
 
-        boolean isJourneyFinished = false;
-        boolean isRouteFound = false;
+        while (routeIndex < routes.length) {
 
-        while (!isJourneyFinished) {
-
-            Route currentRoute = null;
             //pokud se příští místo shoduje s aktuálním umístěním, čekám hodinu a posunu na další místo
             if (nextPlace.equals(currentPlace)) {
-                elapsedTime += 1;
+                elapsedTime += 60;
                 routeIndex++;
+                if (routeIndex < routes.length) {
+                    nextPlace = routes[routeIndex];
+                }
                 continue;
             }
+
             //najdu cestu z výchozího, či aktuálního umístění
             Optional<Route> optionalRoute = findRoute(currentPlace, nextPlace);
+            Route currentRoute;
+
             if (optionalRoute.isPresent()) {
                 currentRoute = optionalRoute.get();
                 currentPlace = nextPlace;
-
-                if (routeIndex < routes.length-1) {
-                    nextPlace = routes[++routeIndex];
-
-                } else {
-                    isJourneyFinished = true;
-                                    }
+                routeIndex++;
+                if (routeIndex < routes.length) {
+                    nextPlace = routes[routeIndex];
+                }
             } else {
                 currentRoute = findRoute(currentPlace, STARTING_PLACE)
-                        .orElseThrow(() -> new IllegalArgumentException("Route for %s -> %s not found, check routes " +
-                                "data."));
+                        .orElseThrow(IllegalArgumentException::new);
                 currentPlace = STARTING_PLACE;
-                nextPlace = routes[routeIndex];
             }
 
-
-
-            elapsedTime += currentRoute.standByTime() / 60.0 + currentRoute.tripDuration();
-
+            elapsedTime += (int) (currentRoute.tripDuration()*60 + currentRoute.standByTime());
 
         }
 
-        return updateTime(departureTime, elapsedTime);
+        return LocalTime.parse(departureTime).plusMinutes(elapsedTime).toString();
     }
 
 
@@ -88,15 +81,8 @@ public class Kata {
 
     }
 
-    private static String updateTime(String departureTime,
-                                     double elapsedTime) {
-        if (!departureTime.matches("[0-9]{2}:[0-9]{2}")){
-            throw new IllegalArgumentException("Wrong format od departure time: " + departureTime);
-        }
-        int hours = (int) elapsedTime;
-        int minutes = (int) ((elapsedTime - hours) * 60);
-        return LocalTime.parse(departureTime).plusHours(hours).plusMinutes(minutes).toString();
-    }
-
 
 }
+
+
+
