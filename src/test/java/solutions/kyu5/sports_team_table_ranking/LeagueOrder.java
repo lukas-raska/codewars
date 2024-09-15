@@ -5,11 +5,9 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 class Team implements Comparable<Team> {
-
     private final int id;
     private int ranking;
     private int goalsScored;
-    private int goalsConceded;
     private int scoreDifference;
     private int points;
 
@@ -43,13 +41,12 @@ class Team implements Comparable<Team> {
 
     public void updateScoredGoals(int scored) {
         this.goalsScored += scored;
-        this.scoreDifference = goalsScored - goalsConceded;
-
     }
 
-    public void updateConcededGoals(int conceded) {
-        this.goalsConceded += conceded;
-        this.scoreDifference = goalsScored - goalsConceded;
+    public void updateScoreDifference(int scored,
+                                      int conceded) {
+        this.scoreDifference += scored;
+        this.scoreDifference -= conceded;
     }
 
     public void updatePoints(int points) {
@@ -59,36 +56,36 @@ class Team implements Comparable<Team> {
     @Override
     public int compareTo(Team other) {
         return Comparator
-                .comparing(Team::getPoints, Comparator.reverseOrder())
-                .thenComparing(Team::getScoreDifference, Comparator.reverseOrder())
-                .thenComparing(Team::getGoalsScored, Comparator.reverseOrder())
+                .comparing(Team::getPoints)
+                .thenComparing(Team::getScoreDifference)
+                .thenComparing(Team::getGoalsScored)
+                .reversed()
                 .compare(this, other);
     }
 }
 
 public class LeagueOrder {
-
-    private final List<Team> teams = new ArrayList<>();
     private final static int POINTS_FOR_WIN = 2;
     private final static int POINTS_FOR_DRAW = 1;
 
 
     public static int[] computeRanks(int number,
                                      int[][] games) {
-        //crating teams
-        List<Team> teams = createTeams(number);
+        //creating teams mapped by Id
+        Map<Integer, Team> teams = createTeams(number);
 
         //processing inputed games
         Arrays.stream(games).forEach(game -> processGame(teams, game));
 
-        //sorting teams by given rules
-        teams.sort(Comparator.naturalOrder());
+        //computing rankings of the teams
+        List<Team> sortedTeams = teams.values().stream()
+                .sorted(Comparator.naturalOrder()) //natural order defined in Team class
+                .toList();
 
-        //computing ranking of the teams
         int currentRank = 1, teamsWithSameRank = 0;
         Team previous = null;
-        for (Team team : teams) {
 
+        for (Team team : sortedTeams) {
             if (previous == null) {
                 team.setRanking(currentRank);
             } else {
@@ -104,30 +101,30 @@ public class LeagueOrder {
             previous = team;
         }
 
-        return teams.stream()
+        return teams.values().stream()
                 .sorted(Comparator.comparing(Team::getId))
                 .mapToInt(Team::getRanking)
                 .toArray();
     }
 
 
-    private static List<Team> createTeams(int numberOfTeams) {
+    private static Map<Integer, Team> createTeams(int numberOfTeams) {
         return IntStream.range(0, numberOfTeams)
-                .mapToObj(Team::new)
-                .collect(Collectors.toList());
+                .boxed()
+                .collect(Collectors.toMap(id -> id, Team::new));
     }
 
-    private static void processGame(List<Team> teams,
+    private static void processGame(Map<Integer, Team> teams,
                                     int[] game) {
 
-        Team first = findById(teams, game[0]);
-        Team second = findById(teams, game[1]);
+        Team first = teams.get(game[0]);
+        Team second = teams.get(game[1]);
 
         first.updateScoredGoals(game[2]);
-        first.updateConcededGoals(game[3]);
+        first.updateScoreDifference(game[2], game[3]);
 
         second.updateScoredGoals(game[3]);
-        second.updateConcededGoals(game[2]);
+        second.updateScoreDifference(game[3], game[2]);
 
         boolean firstWon = game[2] > game[3];
         boolean secondWon = game[2] < game[3];
@@ -140,14 +137,6 @@ public class LeagueOrder {
             first.updatePoints(POINTS_FOR_DRAW);
             second.updatePoints(POINTS_FOR_DRAW);
         }
-    }
-
-    private static Team findById(List<Team> teams,
-                                 int id) {
-        return teams.stream()
-                .filter(team -> team.getId() == id)
-                .findFirst()
-                .orElseThrow();
     }
 
 }
