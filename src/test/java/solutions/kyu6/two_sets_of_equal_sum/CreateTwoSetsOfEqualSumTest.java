@@ -1,7 +1,5 @@
 package solutions.kyu6.two_sets_of_equal_sum;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 //class CreateTwoSetsOfEqualSumTest {
@@ -14,4 +12,3 @@ import static org.junit.jupiter.api.Assertions.*;
 //            assertTrue(result,  "i = " + i + " Result: " + message);
 //        }
 //    }
-}
