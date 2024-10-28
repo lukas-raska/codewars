@@ -1,36 +1,33 @@
 package solutions.kyu5.uniform_milk_production_UNFINISHED;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class Solution {
-
-    public static int uniformMilkOutput(int[] milkRates,
+    public static int uniformMilkOutput(int[] milkProductions,
                                         int groupSize) {
 
-        int totalGoats = milkRates.length;
-        double largestDiff = 0;
+        int goatForTheButcherIndex = 0;
+        double maxDeviation = 0;
 
-        for (int i = 0; i < totalGoats - groupSize; i++) {
+        double sum = Arrays.stream(milkProductions, 0, groupSize).sum();
 
-            var currentGroup = Arrays.stream(milkRates, i, i + groupSize)
-                    .boxed()
-                    .collect(Collectors.toList());
-            var currentGroupStats = currentGroup.stream().mapToInt(n -> n).summaryStatistics();
+        for (int i = 0; i < milkProductions.length - groupSize; i++) {
 
-            double groupAvg = currentGroupStats.getAverage();
-            int groupMax = currentGroupStats.getMax();
-            int groupMin = currentGroupStats.getMin();
+            double avg = sum / groupSize;
 
-            var groupWithoutMax = currentGroup.stream().filter(n -> n == groupMax);
-            var groupWithoutMin = currentGroup.removeIf(n -> n == groupMin);
+            for (int j = i; j < i + groupSize; j++) {
 
+                double deviation = Math.abs(milkProductions[j] - avg);
 
+                if (deviation > maxDeviation) {
+                    maxDeviation = deviation;
+                    goatForTheButcherIndex = j;
+                }
+            }
+
+            sum = sum - milkProductions[i] + milkProductions[i + groupSize];
 
         }
-
-        return 0;
+        return goatForTheButcherIndex;
     }
 }
